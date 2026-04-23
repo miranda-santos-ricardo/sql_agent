@@ -1,8 +1,8 @@
 import re
 
-class QueryParser:
+class ParseQuery:
 
-    def is_markdown_code_chunk(text):
+    def is_markdown_code_chunk(self, text):
         """
         Checks if the given text is in Markdown code chunk format.
 
@@ -16,7 +16,7 @@ class QueryParser:
         return bool(re.search(pattern, text, re.DOTALL))
 
 
-    def extract_code_from_markdown(markdown_text):
+    def extract_code_from_markdown(self, markdown_text):
         """
         Extracts code from a Markdown code chunk.
 

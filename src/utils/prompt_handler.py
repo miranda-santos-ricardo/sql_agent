@@ -3,16 +3,14 @@ import duckdb as db
 from models import SystemPrompt, TableAttributes
 
 class PromptHandler:
-    def __init__(self, system_prompt, user_prompt):
-        self.system_prompt = system_prompt
-        self.user_prompt = user_prompt
+    def __init__(self, system_prompt = None, user_prompt = None):
         self.tbl_attr = None
 
-    def user_prompt(question:str) -> str:
+    def user_prompt(self, question:str) -> str:
         user_template = f"Write a SQL query that returns: {question}"
         return user_template
 
-    def get_tbl_attr(tbl_name: str) -> TableAttributes:
+    def get_tbl_attr(self, tbl_name: str) -> TableAttributes:
         """
         Get column names, types, and schema definition string for a DuckDB table.
         """
@@ -32,7 +30,7 @@ class PromptHandler:
             tbl_schema=schema_str,
         )
         
-    def system_prompt(tbl_name:str) -> str:
+    def system_prompt(self, tbl_name:str) -> str:
         self.get_tbl_attr(tbl_name)
         # Prompt templates
         system_template = (
@@ -40,13 +38,7 @@ class PromptHandler:
             "Return just the SQL query as plain text, without additional text, and don't use markdown format.\n\n"
             f"CREATE TABLE {tbl_name} ({self.tbl_attr.tbl_schema})\n"
         )
-        return SystemPrompt(
-            system=system_template,
-            schema=self.tbl_attr.tbl_schema,
-            col_names=self.tbl_attr.col_names,
-            col_types=self.tbl_attr.col_types,
-            tbl_name=tbl_name,
-        ) 
+        return system_template 
 
     
 

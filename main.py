@@ -13,7 +13,7 @@ def main():
     db.register("retail_sales", retail_sales)
 
     sqla = SQLAgent(tbl_name="retail_sales", max_token=5000)
-    sqla.ask_question("What are the top 15 products by total sales, the total sales should have just 2 decimals and should be ordered by sales in descending order?", verbose=True)
+    sqla.ask_question("What are the top 15 products by total sales, the total sales should have just 2 decimals, aggregated by customer type and should be ordered by sales in descending order?", verbose=True)
 
 
 

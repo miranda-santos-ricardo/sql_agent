@@ -30,15 +30,22 @@ class PromptHandler:
             tbl_schema=schema_str,
         )
         
-    def system_prompt(self, tbl_name:str) -> str:
+    def system_prompt(self, tbl_name:str,additional_context:str=None) -> str:
         self.get_tbl_attr(tbl_name)
         # Prompt templates
         system_template = (
             "Given the following SQL table, your job is to write queries given a user’s request. "
             "Return just the SQL query as plain text, without additional text, and don't use markdown format.\n\n"
+            f"{additional_context}"
             f"CREATE TABLE {tbl_name} ({self.tbl_attr.tbl_schema})\n"
         )
         return system_template 
+
+    def get_character_distinct_values(self, tbl_name:str, col_name:str, num_values:int=50) -> str:
+        query = f"SELECT DISTINCT {col_name} FROM {tbl_name} LIMIT {num_values};"
+        result = db.sql(query).df()
+        distinct_values = result[col_name].tolist()
+        return f"Some distinct values for column '{col_name}' are: {distinct_values}\n"
 
     
 
